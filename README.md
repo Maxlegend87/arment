@@ -6,22 +6,19 @@ A node.js command line parser and checker
 
 This is a module that parses command line arguments. 
 
-You set the arguments to take into account and its settings if you need them. The rest is not your job. 
+Forget those type checks and the comprobation of mandatory arguments. Even the manual documentation is automatically generated.
 
 Lazier to use, easier to read.
 
-## Usage
-
-First, install the package using npm:
+## Install
 
     npm install arment --save
 
->Basic example
+## Example
+
+> Basic example
 
     const arment = require("arment");
-
-    //function to call when the parameter is used on the command line
-    const showEaterType = (food) => food === "meat" ? console.log("It is indeed carnivore!") : console.log("It is indeed NOT carnivore!")
 
     //function to call in case of an error(for example, a number argument that could not be parsed to number)
     arment.errorFunc = (err) => {
@@ -31,36 +28,71 @@ First, install the package using npm:
 
     //We add the arguments and its config!
     arment
-        .add("type", [0], { optional: false, desc: "Animal type" })
-        .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue:"Mark", desc: "Animal name" })
-        .add("legs", ["l", "legs", "nLegs"], { type: arment.TYPES.NUMBER, defaultValue: 2, desc: "Number of legs of the animal" })
-        .add("food", ["f", "nomnom"], {type: arment.TYPES.STRING, desc: "Food eaten by the animal", func: showEaterType })
+        .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue:"Mark", desc: "Human name" })
         .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show });
 
+> Full example
+
+    const arment = require("arment");
+
+    //function to call when the parameter is used on the command line
+    const showEaterType = (food) => {
+        if (food === "meat") console.log("It is indeed carnivore!");
+        else console.log("It is indeed NOT carnivore!");
+    };
+
+    //function to call in case of an error(for example, a number argument that could not be parsed to number)
+    const argumentError= (err) => {
+        console.log(err);
+        process.exit(-1);
+    };
+
+    arment.errorFunc = argumentError;
+
+    //We add the arguments and its config!
+    arment
+        .add("type", [0], { optional: false, desc: "Animal type" })
+        .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue: "Mark", desc: "Animal name" })
+        .add("legs", ["nLegs"], { type: arment.TYPES.NUMBER, defaultValue: 2, desc: "Number of legs of the animal" })
+        .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
+        .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show });
     //and done!
 
     //every argument we added can be used via arment.args
-    console.log(arment.args.type)
-    console.log(arment.args.food)
+    console.log(arment.args.type);
+    console.log(arment.args.food);
 
-    //for example if we do this
+    //To get the documentation 
     arment.show();
     /**
-    * Gives us this:
-    * Usage:
-    * node file.js <type> [options]
-    * node file.js <type> [-n|--name <string>] [-l|--legs|--nLegs <number>] [-f|--nomnom <string>] [-h|--help <any>]
-    *
-    * Options: 
-    * -n --name <string>
-    *                         Animal name [default: Mark]
-    * -l --legs --nLegs <number>
-    *                         Number of legs of the animal [default: 2]
-    * -f --nomnom <string>
-    *                         Food eaten by the animal 
-    * -h --help <any>
-    *                         Displays help manual 
-    */
+     * Usage:
+     * node file.js <type> [options]
+     * node file.js <type> [-n|--name <string>] [--nLegs <number>] [-f|--nomnom <string>] [-h|--help <any>]
+     *
+     * Options: 
+     * -n --name <string>
+     *                         Animal name [default: Mark]
+     * --nLegs <number>
+     *                         Number of legs of the animal [default: 2]
+     * -f --nomnom <string>
+     *                         Food for nom 
+     * -h --help <any>
+     *                         Displays help manual 
+     */
+
+## Usage
+
+### parsedArgs
+
+When **arment** is required, will automatically parse the command line arguments.
+
+You can get them parsed in JSON with the property **parsedArgs**.
+
+    //node script.js argument -l --banana 
+
+    console.log(arment.parsedArgs); //{ notFlags: ["argument"], banana: true }
+
+>All arguments passed without flag, will be pushed to the **notFlags** array
 
 ## License
 
