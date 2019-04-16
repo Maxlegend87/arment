@@ -24,7 +24,7 @@ Lazier to use, easier to read.
     arment
         .add("name", ["n", "name"], { desc: "Human name" })
         .catch((errs) => {
-            console.log(err[0].message);
+            if(errs.length) console.log(errs[0].message);
             process.exit(-1);
         });
     console.log(arment.args.name);
@@ -54,7 +54,7 @@ Lazier to use, easier to read.
         .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
         .add("help", ["h", "help"], { desc: "Displays help manual", func: showManual })
         .catch((errs) => {
-            console.log(err[0].message);
+            if(errs.length) console.log(errs[0].message);
             process.exit(-1);
         });
     //and done!
@@ -229,7 +229,7 @@ Cases:
 Returns an array of errors.
 
     arment.catch((errs) => {
-        console.log(err[0].message);
+        if(errs.length) console.log(errs[0].message);
         process.exit(-1);
     });
 
