@@ -28,8 +28,8 @@ Lazier to use, easier to read.
 
     //We add the arguments and its config!
     arment
-        .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue:"Mark", desc: "Human name" })
-        .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show });
+        .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show })
+        .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue:"Mark", desc: "Human name" });
 
 > Full example
 
@@ -51,11 +51,11 @@ Lazier to use, easier to read.
 
     //We add the arguments and its config!
     arment
+        .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show })
         .add("type", [0], { optional: false, desc: "Animal type" })
         .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue: "Mark", desc: "Animal name" })
         .add("legs", ["nLegs"], { type: arment.TYPES.NUMBER, defaultValue: 2, desc: "Number of legs" })
-        .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
-        .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show });
+        .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType });
     //and done!
 
     //every argument we added can be used via arment.args
