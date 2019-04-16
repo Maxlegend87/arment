@@ -21,7 +21,7 @@ Lazier to use, easier to read.
     const arment = require("arment");
 
     //function to call in case of an error(for example, a number argument that could not be parsed to number)
-    arment.errorFunc = (err) => {
+    arment.catch = (err) => {
         console.log(err);
         process.exit(-1);
     };
@@ -47,13 +47,13 @@ Lazier to use, easier to read.
         process.exit(-1);
     };
 
-    arment.errorFunc = argumentError;
+    arment.catch = argumentError;
 
     //We add the arguments and its config!
     arment
         .add("type", [0], { optional: false, desc: "Animal type" })
         .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue: "Mark", desc: "Animal name" })
-        .add("legs", ["nLegs"], { type: arment.TYPES.NUMBER, defaultValue: 2, desc: "Number of legs of the animal" })
+        .add("legs", ["nLegs"], { type: arment.TYPES.NUMBER, defaultValue: 2, desc: "Number of legs" })
         .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
         .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show });
     //and done!
