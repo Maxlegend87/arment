@@ -24,7 +24,7 @@ Lazier to use, easier to read.
     arment
         .add("name", ["n", "name"], { desc: "Human name" })
         .catch((errs) => {
-            if(errs.length) console.log(err[0].message);
+            console.log(err[0].message);
             process.exit(-1);
         });
     console.log(arment.args.name);
@@ -54,13 +54,12 @@ Lazier to use, easier to read.
         .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
         .add("help", ["h", "help"], { desc: "Displays help manual", func: showManual })
         .catch((errs) => {
-            if(errs.length) console.log(err[0].message);
+            console.log(err[0].message);
             process.exit(-1);
         });
     //and done!
 
     //every argument we added can be used via arment.args
-    console.log(arment.args.help);
     console.log(arment.args.type);
     console.log(arment.args.name);
     console.log(arment.args.legs);
@@ -94,7 +93,7 @@ Variables are created in order, therefore its recommendable to add the manual as
 
 >Any variable added with **add** will be parsed and saved on the [args](#args) property.
 
-|Paramenter|Type|Description|Example|
+|Parameter|Type|Description|Example|
 |--|--|--|--|
 |name|string|Name for the variable once got from the arguments|"animal"|
 |keys|string[] or number[]|An array of keys that will represent the flags to get the variable|['a','animal']|
@@ -223,12 +222,14 @@ Cases:
 * A variable is set to non optional and no value was found
 * A variable value could not be parsed to the defined type from [TYPES](#TYPES)
 
-|Paramenter|Type|Description|Example|
+|Parameter|Type|Description|Example|
 |--|--|--|--|
 |func|Function|function to catch the errors|console.log|
 
+Returns an array of errors.
+
     arment.catch((errs) => {
-        if(errs.length) console.log(err[0].message);
+        console.log(err[0].message);
         process.exit(-1);
     });
 

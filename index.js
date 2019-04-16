@@ -30,14 +30,17 @@ class Arment {
     add(name, keys, { optional = true, defaultValue, type = this.TYPES.ANY, desc = "", func = () => false } = {}) {
         if (!name || !keys || !keys.length) return this;
 
-        let value = keys.find((key) => this.parsedArgs[key] || this.parsedArgs.notFlags[key]) || defaultValue;
+        let value;
+        let key = keys.find((key) => value = this.parsedArgs[key] || this.parsedArgs.notFlags[key]);
 
-        if (!optional && value === undefined) this.errorsFound.push(new MandatoryNotFoundError(name));
+        if (!optional && key === undefined) this.errorsFound.push(new MandatoryNotFoundError(name));
+
+        value = value || defaultValue;
 
         let { err, val } = parseValue(name, value, type);
         if (err) this.errorsFound.push(err);
-
         value = val;
+
         this.definedArgs[name] = { keys, value, optional, defaultValue, type, desc, func };
         this.definedArgsValues[name] = value;
 
@@ -100,7 +103,7 @@ class Arment {
         this.outputFunction(fullString);
     }
 
-    catch(func) { func(this.errorsFound); }
+    catch(func) { if (this.errorsFound.length) func(this.errorsFound); }
 }
 
 module.exports = new Arment();

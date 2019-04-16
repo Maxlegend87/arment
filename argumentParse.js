@@ -9,7 +9,7 @@ const parseDoubleHashed = (arg, next, parsedArgs) => {
     arg = arg.slice(2);
     const [key, value] = arg.split("=");
     if (hasEqual(arg)) parsedArgs[key] = value;
-    else if (hasDash(next)) parsedArgs[arg] = true;
+    else if (!next || hasDash(next)) parsedArgs[arg] = true;
     else parsedArgs[arg] = next;
     return parsedArgs[arg];
 };
@@ -18,7 +18,7 @@ const parseSimpleHashed = (arg, next, parsedArgs) => {
     arg = arg.slice(1);
     const lastChar = arg.slice(-1);
     for (let char of arg) parsedArgs[char] = true;
-    if (!hasDash(next)) parsedArgs[lastChar] = next;
+    if (next && !hasDash(next)) parsedArgs[lastChar] = next;
     return parsedArgs[lastChar];
 };
 
@@ -38,4 +38,4 @@ const parseArgs = (commandArgs) => {
     return parsedArgs;
 };
 
-module.exports=parseArgs;
+module.exports = parseArgs;
