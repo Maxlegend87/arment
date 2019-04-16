@@ -52,7 +52,7 @@ const parseArray = (value) => {
 
 const parseValue = (name, value, type) => {
     let err = null;
-    let val = undefined;
+    let val;
 
     if (type === TYPES.ANY) val = parseAny(value);
     else if (type === TYPES.BOOLEAN) val = parseBoolean(value);
@@ -64,6 +64,7 @@ const parseValue = (name, value, type) => {
     else if (type === TYPES.DATE) val = parseDate(value);
     else if (type === TYPES.OBJECT) val = parseObject(value);
     else if (type === TYPES.ARRAY) val = parseArray(value);
+    else err = new TypeIsIncorrectError(name, value, type);
 
     if (val === null) err = new TypeIsIncorrectError(name, value, type);
 

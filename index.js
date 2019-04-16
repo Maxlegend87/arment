@@ -4,11 +4,11 @@ const parseArgs = require('./argumentParse');
 const { MandatoryNotFoundError } = require("./errors");
 const { TYPES, parseValue } = require('./dataParse');
 
+const parsedArgs = parseArgs(process.argv);
+
 class Arment {
 
     constructor() {
-
-        this.parsedArgs = parseArgs(process.argv);
 
         this.catchFunction = () => false;
 
@@ -18,6 +18,8 @@ class Arment {
 
         this.outputFunction = console.log;
     }
+
+    get parsedArgs() { return parsedArgs; }
 
     get TYPES() { return TYPES; }
 
@@ -41,7 +43,7 @@ class Arment {
         this.definedArgs[name] = { keys, value, optional, defaultValue, type, desc, func };
         this.definedArgsValues[name] = value;
 
-        func(value);
+        func(value,name);
 
         return this;
     }
@@ -89,14 +91,18 @@ class Arment {
             }
             stringDesc += `\t\t\t${desc} ${defaultText}\n`;
         }
-
+        let executionBasicText = executionBasic.join(" ");
+        let executionFullText = executionFull.join(" ");
         let fullString = "Usage:\n";
         fullString += `node file.js ${executionBasic.join(" ")} [options]\n`;
-        fullString += `node file.js ${executionFull.join(" ")}\n\n`;
+        if (executionBasicText !== executionFullText) fullString += `node file.js ${executionFull.join(" ")}\n\n`;
         fullString += "Options:\n";
         fullString += stringDesc;
 
         this.outputFunction(fullString);
     }
 }
+
+let queso = new Arment();
+
 module.exports = new Arment();
