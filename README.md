@@ -66,7 +66,7 @@ Lazier to use, easier to read.
     console.log(arment.args.food);
 
     //To get the documentation 
-    arment.show();
+    //arment.show();
     /**
      * Usage:
      * node file.js <type> [options]
