@@ -1,8 +1,8 @@
 "use strict";
 
 const parseArgs = require('./argumentParse');
-const { MandatoryNotFoundError, TypeIsIncorrectError } = require("./errors");
-const { TYPES } = require('./dataParse');
+const { MandatoryNotFoundError } = require("./errors");
+const { TYPES, parseValue } = require('./dataParse');
 
 class Arment {
 
@@ -30,6 +30,10 @@ class Arment {
 
         if (!optional && value === undefined) this.catchFunction(new MandatoryNotFoundError(name));
 
+        let { err, val } = parseValue(name, value, type);
+        if (err) this.catchFunction(err);
+
+        value = val;
         this.definedArgs[name] = { keys, value, optional, defaultValue, type, desc, func };
         this.definedArgsValues[name] = value;
 

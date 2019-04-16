@@ -15,9 +15,9 @@ class MandatoryNotFoundError extends ArmentError {
 }
 
 class TypeIsIncorrectError extends ArmentError {
-    constructor(name, type) {
-        super(`${name} parameter could not be parsed to <${type}>`);
-        this.data = { name };
+    constructor(name, value, type) {
+        super(`${name} parameter: ${value}. Could not be parsed to <${type}>`);
+        this.data = { name, value, type };
     }
 }
 
