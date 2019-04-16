@@ -20,16 +20,13 @@ Lazier to use, easier to read.
 
     const arment = require("arment");
 
-    //function to call in case of an error(for example, a number argument that could not be parsed to number)
-    arment.catch = (err) => {
-        console.log(err);
-        process.exit(-1);
-    };
-
     //We add the arguments and its config!
     arment
-        .add("name", ["n", "name"], { desc: "Human name" });
-
+        .add("name", ["n", "name"], { desc: "Human name" })
+        .catch((errs) => {
+            if(errs.length) console.log(err[0].message);
+            process.exit(-1);
+        });
     console.log(arment.args.name);
 
 > Full example
@@ -42,21 +39,24 @@ Lazier to use, easier to read.
         else console.log("It is indeed NOT carnivore!");
     };
 
-    //function to call in case of an error(for example, a number argument that could not be parsed to number)
-    const argumentError= (err) => {
-        console.log(err);
-        process.exit(-1);
-    };
-
-    arment.catch = argumentError;
+    const showManual = (help) => {
+        if(help){
+            arment.show();
+            process.exit(0);
+        }
+    }
 
     //We add the arguments and its config!
     arment
-        .add("help", ["h", "help"], { desc: "Displays help manual", func: arment.show })
         .add("type", [0], { optional: false, desc: "Animal type" })
         .add("name", ["n", "name"], { type: arment.TYPES.STRING, defaultValue: "Mark", desc: "Animal name" })
         .add("legs", ["nLegs"], { type: arment.TYPES.NUMBER, defaultValue: 2, desc: "Number of legs" })
-        .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType });
+        .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
+        .add("help", ["h", "help"], { desc: "Displays help manual", func: showManual })
+        .catch((errs) => {
+            if(errs.length) console.log(err[0].message);
+            process.exit(-1);
+        });
     //and done!
 
     //every argument we added can be used via arment.args
@@ -88,7 +88,9 @@ Lazier to use, easier to read.
 
 ### add
 
-This is the main tool with arment, just set your variables, and arment will take care of them.
+This is the main tool with [arment](#Arment), just set your variables, and [arment](#Arment) will take care of them.
+
+Variables are created in order, therefore its recommendable to add the manual as the last one if you execute [show](#show) whitin the [ArmentOption](#options) 'func'.
 
 >Any variable added with **add** will be parsed and saved on the [args](#args) property.
 
@@ -97,6 +99,8 @@ This is the main tool with arment, just set your variables, and arment will take
 |name|string|Name for the variable once got from the arguments|"animal"|
 |keys|string[] or number[]|An array of keys that will represent the flags to get the variable|['a','animal']|
 |options(`Optional`)|[ArmentOptions](#ArmentOptions)|
+
+Since it returns the [arment](#Arment) object, they can be chained, even ending with a [catch](#catch).
 
 >When you want to use an unflagged argument keys must be an array with only one number, wich will be the position on the **notFlags** array in [parsedArgs](#parsedArgs).
 
@@ -129,6 +133,17 @@ This is the main tool with arment, just set your variables, and arment will take
 > 
     arment.add("number", ["n"], { func: (value)=>console.log(\`In number argument, received ${value}\`) });
 
+* Example typical manual
+>
+    const showManual = (help) => {
+        if(help){
+            arment.show();
+            process.exit(0);
+        }
+    }
+
+    arment.add("help", ["h", "help"], { desc: "Displays help manual", func: showManual })
+
 ### ArmentOptions
 
 |Option|Type|Description|Example|
@@ -145,8 +160,7 @@ When this function is called, a manual for the script arguments defined with [ad
 
     //node file.js --nomnom cheese
 
-    arment
-        .add("food", ["f", "nomnom"]);
+    arment.add("food", ["f", "nomnom"]);
 
     arment.show();
     /**
@@ -203,20 +217,20 @@ Whenever you [add](#add) a new [arment](#Arment) variable, its name parameter wi
 
 ### catch
 
-Whenever you [add](#add) a new [arment](#Arment) variable, it will be checked with its [ArmentOptions](#options). If certain variable conditions are not met, this function will be called with the error as parameter.
+Whenever you [add](#add) a new [arment](#Arment) variable, it will be checked with its [ArmentOptions](#options). If certain variable conditions are not met, errors will be generated.
 
 Cases:
 * A variable is set to non optional and no value was found
-* A variable value could not be parsed to the defined type from v
+* A variable value could not be parsed to the defined type from [TYPES](#TYPES)
 
-The default **catch** function does nothing. You can set your custom **catch** function with its setter.
+|Paramenter|Type|Description|Example|
+|--|--|--|--|
+|func|Function|function to catch the errors|console.log|
 
-    const argumentError= (err) => {
-        console.log(err);
+    arment.catch((errs) => {
+        if(errs.length) console.log(err[0].message);
         process.exit(-1);
-    };
-
-    arment.catch = argumentError;
+    });
 
 ### output
 

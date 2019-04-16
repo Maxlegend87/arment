@@ -10,13 +10,13 @@ class Arment {
 
     constructor() {
 
-        this.catchFunction = () => false;
-
         this.definedArgs = {};
 
         this.definedArgsValues = {};
 
         this.outputFunction = console.log;
+
+        this.errorsFound = [];
     }
 
     get parsedArgs() { return parsedArgs; }
@@ -25,8 +25,6 @@ class Arment {
 
     get args() { return this.definedArgsValues; }
 
-    set catch(func) { this.catchFunction = func; }
-
     set output(func) { this.outputFunction = func; }
 
     add(name, keys, { optional = true, defaultValue, type = this.TYPES.ANY, desc = "", func = () => false } = {}) {
@@ -34,16 +32,16 @@ class Arment {
 
         let value = keys.find((key) => this.parsedArgs[key] || this.parsedArgs.notFlags[key]) || defaultValue;
 
-        if (!optional && value === undefined) this.catchFunction(new MandatoryNotFoundError(name));
+        if (!optional && value === undefined) this.errorsFound.push(new MandatoryNotFoundError(name));
 
         let { err, val } = parseValue(name, value, type);
-        if (err) this.catchFunction(err);
+        if (err) this.errorsFound.push(err);
 
         value = val;
         this.definedArgs[name] = { keys, value, optional, defaultValue, type, desc, func };
         this.definedArgsValues[name] = value;
 
-        func(value,name);
+        func(value, name);
 
         return this;
     }
@@ -101,8 +99,8 @@ class Arment {
 
         this.outputFunction(fullString);
     }
-}
 
-let queso = new Arment();
+    catch(func) { func(this.errorsFound); }
+}
 
 module.exports = new Arment();
