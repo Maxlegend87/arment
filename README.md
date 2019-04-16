@@ -54,7 +54,7 @@ Lazier to use, easier to read.
         .add("food", ["f", "nomnom"], { type: arment.TYPES.STRING, desc: "Food for nom", func: showEaterType })
         .add("help", ["h", "help"], { desc: "Displays help manual", func: showManual })
         .catch((errs) => {
-            if(errs.length) console.log(err[0].message);
+            if(errs.length) console.log(errs[0].message);
             process.exit(-1);
         });
     //and done!
@@ -228,7 +228,7 @@ Cases:
 |func|Function|function to catch the errors|console.log|
 
     arment.catch((errs) => {
-        if(errs.length) console.log(err[0].message);
+        if(errs.length) console.log(errs[0].message);
         process.exit(-1);
     });
 
