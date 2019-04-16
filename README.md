@@ -101,32 +101,32 @@ This is the main tool with arment, just set your variables, and arment will take
 >When you want to use an unflagged argument keys must be an array with only one number, wich will be the position on the **notFlags** array in [parsedArgs](#parsedArgs).
 
 * Example unflagged argument
-
+>
     arment.add("first", [0]);
 
 * Example flagged arguments
-
+>
     //this will take into account -n and --number
     arment.add("number", ["n","number"]);
 
 * Example mandatory argument
-
+>
     arment.add("number", ["n"], { optional: false });
 
 * Example number argument
-
+>
     arment.add("number", ["n"], { type: arment.TYPES.NUMBER });
 
 * Example number argument with default value
-
+>
     arment.add("number", ["n"], { type: arment.TYPES.NUMBER, defaultValue: 3 });
 
 * Example argument with description
-  
+> 
     arment.add("number", ["n"], { desc: "This is a number if you set it!" });
 
 * Example argument with function
-  
+> 
     arment.add("number", ["n"], { func: (value)=>console.log(\`In number argument, received ${value}\`) });
 
 ### ArmentOptions
