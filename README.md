@@ -24,7 +24,7 @@ Lazier to use, easier to read.
     arment
         .add("name", ["n", "name"], { desc: "Human name" })
         .catch((errs) => {
-            if(errs.length) console.log(err[0].message);
+            if(errs.length) console.log(errs[0].message);
             process.exit(-1);
         });
     console.log(arment.args.name);
